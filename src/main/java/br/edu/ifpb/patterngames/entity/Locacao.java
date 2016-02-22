@@ -5,6 +5,8 @@
  */
 package br.edu.ifpb.patterngames.entity;
 
+import br.edu.ifpb.patterngames.entity.observer.Observable;
+import br.edu.ifpb.patterngames.entity.observer.Observer;
 import br.edu.ifpb.patterngames.entity.strategy.LocacaoComum;
 import br.edu.ifpb.patterngames.entity.strategy.LocacaoEspecial;
 import br.edu.ifpb.patterngames.entity.strategy.LocacaoStrategy;
@@ -12,9 +14,8 @@ import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author Natarajan
  */
-public class Locacao{
+public class Locacao  implements Observable<Jogo>{
     private Cliente cliente;
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;
@@ -30,9 +31,10 @@ public class Locacao{
     private LocacaoStrategy strategy;
     private BigDecimal valorPago;
     
+    private List<Observer<Jogo>> observers;
         
     public Locacao(Cliente cliente, LocalDate dataLocacao, Jogo jogo) throws JogoAlugadoException{
-        
+        this.observers = new ArrayList<>();
         this.cliente = cliente;
         this.dataLocacao = dataLocacao;
         this.jogo = jogo;
@@ -99,7 +101,37 @@ public class Locacao{
         this.valorPago = calcularValor();
         this.jogo.devolver();
     }
+    
+    @Override
+    public void addObserver(Observer newObserver) {
+        observers.add(newObserver);
+    }
 
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Jogo object) {
+        for (Observer o : observers) {
+            o.update(object);
+        }
+    }
+
+    public void devolver(){
+        try {
+            this.jogo.devolver();
+            for (Observer o : observers) {
+                notifyObservers(this.jogo);
+            }
+        } catch (JogoAlugadoException ex) {
+            Logger.getLogger(Locacao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

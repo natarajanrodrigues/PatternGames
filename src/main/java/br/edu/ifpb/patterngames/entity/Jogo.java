@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Natarajan
  */
-public class Jogo implements Observable<Jogo> {
+public class Jogo {
 
     protected JogoState estado;
     private Integer id;
@@ -59,25 +59,10 @@ public class Jogo implements Observable<Jogo> {
 
     public void devolver() throws JogoAlugadoException {
         this.estado = this.estado.devolver();
-        notifyObserver(this);
+    
     }
 
-    @Override
-    public void addObserver(Observer newObserver) {
-        observers.add(newObserver);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObserver(Jogo object) {
-        for (Observer o : observers) {
-            o.update(object);
-        }
-    }
+    
 
     @Override
     public String toString() {

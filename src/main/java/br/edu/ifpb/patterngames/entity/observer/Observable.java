@@ -16,6 +16,6 @@ public interface Observable<T> {
     
     void removeObserver(Observer observer);
     
-    void notifyObserver(T object);
+    void notifyObservers(T object);
     
 }
