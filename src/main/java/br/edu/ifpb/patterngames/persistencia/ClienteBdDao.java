@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.patterngames.persistencia;
 
+
 import br.edu.ifpb.patterngames.entity.Cliente;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -47,20 +48,20 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
     }
 
     @Override
-    public boolean apagar(Cliente objeto) {
+    public boolean alterar(Cliente objeto) {
         try {
 
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
 
-            String sql = "INSERT INTO Cliente(cpf, nome, email) VALUES(?, ?, ?)";
+            String sql = "UPDATE Cliente SET nome = ?, email = ? where cpf= ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
-            ps.setString(1, objeto.getCpf());
-            ps.setString(2, objeto.getNome());
-            ps.setString(3, objeto.getEmail());
-
+            ps.setString(1, objeto.getNome());
+            ps.setString(2, objeto.getEmail());
+            ps.setString(3, objeto.getCpf());
+            
             if (ps.executeUpdate() > 0) {
                 return true;
             }
@@ -72,7 +73,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
     }
 
     @Override
-    public boolean alterar(Cliente objeto) {
+    public boolean apagar(Cliente objeto) {
         try {
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
@@ -108,9 +109,8 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             ps.setString(1, key);
 
             ResultSet rs = ps.executeQuery();
-            rs.next();
-
-            usuario = preencherCliente(rs);
+            if (rs != null && rs.next())
+                usuario = preencherCliente(rs);
 
             return usuario;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
@@ -148,7 +148,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             return null;
         }
     }
-
+    
     private Cliente preencherCliente(ResultSet rs) {
         Cliente cliente;
         try {

@@ -14,8 +14,9 @@ import java.time.LocalDate;
  */
 public interface JogoState {
     
-    public JogoState alugar(LocalDate dataDevolucao) throws JogoAlugadoException;
+//    public JogoState alugar(LocalDate dataDevolucao);
+    public JogoState alugar() throws JogoAlugadoException;
     
-    public JogoState devolver() throws JogoAlugadoException;
+    public JogoState devolver();
     
 }

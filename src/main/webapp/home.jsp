@@ -4,6 +4,7 @@
     Author     : Natarajan 
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="br.edu.ifpb.patterngames.entity.Jogo"%>
 <%@page import="java.util.List"%>
 <%@page import="br.edu.ifpb.patterngames.persistencia.JogoBdDao"%>
@@ -25,6 +26,9 @@
 
     </head>
     <body>
+        <%
+            session.setAttribute("cpfCliente", request.getParameter("cpf"));
+        %>
         <header style="padding-top: 100px">
             <nav class="navbar navbar-default navbar-fixed-top">
                 <div class="container">
@@ -41,113 +45,92 @@
             </nav>
         </header>
 
+        <span class="col-md-6 col-md-offset-3 container" >    
+            <label>Cliente: </label> ${cliente.nome}
+        </span>
+
         <div class="col-md-6 col-md-offset-3" >
-            <div class="row container-fluid">
+            <h2><strong>Locação de jogo</strong></h2>
+            <form action="ServletAlugarJogo" id="formJogo" method="post">
                 <div class="form-group has-feedback">
                     <label for="jogo" class="control-label">Escolha um jogo</label>
                     <select class="form-control" id="jogo" name="jogo"> 
                         <%
                             List<Jogo> jogos = new JogoBdDao().listarTodos();
+                            pageContext.setAttribute("games", jogos);
                             try {
 
                                 for (Jogo jogo : jogos) {
-                                    out.print("<option value=\"" + jogo.getId()+ "\">" + jogo.getNome() + "</option>\n");
+                                    out.print("<option value=\"" + jogo.getId() + "\">" + jogo.getNome() + "</option>\n");
                                 }
                             } catch (Exception e) {
                             }
                         %>
                     </select>
-
                 </div>
+                <div class="form-group">
+                    <!--<btn id="btnAlugar" form="formJogo" type="submit" class="btn btn-primary">Alugar</btn>-->
+                    <!--<input id="btnAlugar" type="submit" form="formJogo" class="btn btn-primary" value="Alugar">-->
+                    <a id="btnAlugar" form="formJogo" type="submit" class="btn btn-primary">Alugar</a>
+                </div>
+                <div id="alertaErroLocacao" class="alert alert-danger alert-dismissible" role="alert" hidden></div>
 
-            </div>
+            </form>
+
+            <!--            <div class="row container-fluid">
+                            <table class="table table-bordered table-hover table-selectable">
+                                <thead>
+                                    <tr class="alert-info text-center">
+                                        <th id="tableHeadId" class="text-center">Id</th>
+                                        <th id="tableHeadNome"class="text-center">Nome</th>
+                                        <th id="tableHeadGenero" class="text-center">Genero</th>
+                                        <th class="text-center">Operações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableGames" class="searchable">
+            <%--<c:forEach var="j" items="games">--%>
+                <tr>
+                    <th class="text-center"> ${j.id}</th>
+                    <th class="text-center"> ${j.nome}</th>
+                    <th class="text-center"> ${j.genero}</th>
+                    <th class="text-center"></th>
+                </tr>
+            <%--</c:forEach>--%>
+        </tbody>
+    </table>
+</div>-->
+
+
+
         </div>
 
         <script src="dist/js/jquery-2.1.4.min.js"></script>
         <script src="dist/js/bootstrap.min.js"></script>
         <script type="text/javascript">
-
             function processaRequest() {
                 event.preventDefault();
 
-                $('#alertaCpfErro').hide();
-                $('#alertaClienteSemCadastro').hide();
+                $('#alertaErroLocacao').hide();
 
-                var dados = $("#formulario_cliente").serialize();
+                var dados = $("#formJogo").serialize();
 
-                if ($("#cpf").val() === "") {
-                    $("#alertaCpfErro").html("Informe um número de CPF").show(250);
-                } else {
-                    $.post("Atendimento", dados, function (responseJson) {
-                        var cpf = responseJson.cpf;
+                $.post("ServletAlugarJogo", dados, function (responseGson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
 
-                        if (cpf === "verificado") {
-                            if (responseJson.operacao === "clienteNãoExiste") {
-                                $("#alertaClienteSemCadastro").show(250);
-                            } else {
-                                //$("#btnEntrar").attr('href', 'home');
-                                //                        $(location).attr('href', 'editarPerfil');
-                                $(location).attr('href', 'home?cpf=' + $("#cpf").val());
-                            }
-                        } else {
-                            $("#alertaCpfErro").html("O CPF informado <strong>não é válido</strong>").show(250);
-                        }
+                    var resultado = responseGson.alugou;
 
-                    });
-                }
-
-
-
-            }
-
-            $("#btnEntrar").click(processaRequest);
-
-
-            function mascaraInteiro() {
-                if (event.keyCode < 48 || event.keyCode > 57) {
-                    event.returnValue = false;
-                    return false;
-                }
-                return true;
-            }
-            function MascaraCPF(cpf) {
-                if (mascaraInteiro(cpf) === false) {
-                    event.returnValue = false;
-                }
-                return formataCampo(cpf, '000.000.000-00', event);
-            }
-            function formataCampo(campo, Mascara, evento) {
-                var boleanoMascara;
-
-                var Digitato = evento.keyCode;
-                exp = /\-|\.|\/|\(|\)| /g;
-                campoSoNumeros = campo.value.toString().replace(exp, "");
-
-                var posicaoCampo = 0;
-                var NovoValorCampo = "";
-                var TamanhoMascara = campoSoNumeros.length;
-                ;
-
-                if (Digitato !== 8) { // backspace 
-                    for (i = 0; i <= TamanhoMascara; i++) {
-                        boleanoMascara = ((Mascara.charAt(i) === "-") || (Mascara.charAt(i) === ".")
-                                || (Mascara.charAt(i) === "/"));
-                        boleanoMascara = boleanoMascara || ((Mascara.charAt(i) === "(")
-                                || (Mascara.charAt(i) === ")") || (Mascara.charAt(i) === " "));
-                        if (boleanoMascara) {
-                            NovoValorCampo += Mascara.charAt(i);
-                            TamanhoMascara++;
-                        } else {
-                            NovoValorCampo += campoSoNumeros.charAt(posicaoCampo);
-                            posicaoCampo++;
-                        }
+                    if (resultado === "ok") {
+//                        $(location).attr('href', 'home');
+                        $('#alertaErroLocacao').show(250).text("Alugado com Sucesso");
+                    } else {
+                        var value = responseGson.erro;
+                        $('#alertaErroLocacao').show(250).text(value);
                     }
-                    campo.value = NovoValorCampo;
-                    return true;
-                } else {
-                    return true;
-                }
+                });
+
             }
+
+            $('#btnAlugar').click(processaRequest);
+
         </script>
     </body>
 </html>

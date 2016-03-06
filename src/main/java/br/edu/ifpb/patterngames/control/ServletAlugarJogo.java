@@ -5,25 +5,27 @@
  */
 package br.edu.ifpb.patterngames.control;
 
-import br.edu.ifpb.patterngames.entity.Cliente;
-import br.edu.ifpb.patterngames.model.ClienteBo;
+import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
+import br.edu.ifpb.patterngames.model.LocacaoBo;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Natarajan
  */
-@WebServlet(name = "ServletAntendimento", urlPatterns = {"/Atendimento"})
-public class ServletAntendimento extends HttpServlet {
+@WebServlet(name = "ServletAlugarJogo", urlPatterns = {"/ServletAlugarJogo"})
+public class ServletAlugarJogo extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,47 +39,35 @@ public class ServletAntendimento extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        String cpf = request.getParameter("cpf");
-        request.setAttribute("cpf", cpf);
-
-        Map<String, String> verificaCPF = new ClienteBo().verificaCpf(cpf);
+        response.setCharacterEncoding("utf-8");
         
-        Map<String, String> resultado = new HashMap<>();
+        String cpfCliente = (String) request.getSession().getAttribute("cpfCliente");
+        String idJogo = (String) request.getParameter("jogo");
         
+        Map<String, String> resultadoLocacao = new HashMap<>();
         
-        if (verificaCPF.get("verificacao").equals("ok")) {
-            request.setAttribute("cpf", cpf);
-            resultado.put("cpf", "verificado");
-            Cliente c = new ClienteBo().buscarPorCPF(cpf);
-            // se o cliente já está cadastrado
-            if (c != null) {
-//                request.setAttribute("cliente", c);
-//                request.getRequestDispatcher("home");
-                request.getSession().setAttribute("cliente", c);
-            } else {
-                resultado.put("operacao", "clienteNãoExiste");
+        boolean alugar = false;
+        try {
+            alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
+            
+            if (alugar) {
+                resultadoLocacao.put("alugou", "ok");
             }
-        } else {
-            resultado.put("cpf", "errado");
-            for (String i : verificaCPF.keySet()){
-                resultado.put("erro" + i, verificaCPF.get(i));
-            }
+            
+        } catch (JogoAlugadoException ex) {
+            Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
+            resultadoLocacao.put("alugou", "fail");
+            resultadoLocacao.put("erro", ex.getMessage());
         }
-
-        String json = new Gson().toJson(resultado);
+        
+        
+        String json = new Gson().toJson(resultadoLocacao);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
-
-//        
-//        if (c == null) {
-//            request.setAttribute("operacao", "cadastrar");
-//            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-//            rd.forward(request, response);
-//        } else {
-//            response.getWriter().print("OK");
-//        }
+                
+        
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

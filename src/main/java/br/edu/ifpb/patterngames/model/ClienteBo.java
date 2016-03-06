@@ -79,7 +79,7 @@ public class ClienteBo {
         CPFValidator validator = new CPFValidator();
         List<ValidationMessage> validaCPF = validator.invalidMessagesFor(cpf);
 
-        if (validaCPF.size() == 0) {
+        if (validaCPF.isEmpty()) {
             resultado.put("verificacao", "ok");
 //            if (buscarPorCPF(cpf) != null){
 //                resultado.put("cliente", "existente");

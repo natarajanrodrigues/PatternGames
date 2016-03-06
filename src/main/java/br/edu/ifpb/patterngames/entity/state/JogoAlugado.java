@@ -6,8 +6,6 @@
 package br.edu.ifpb.patterngames.entity.state;
 
 import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,24 +13,26 @@ import java.util.logging.Logger;
  *
  * @author Natarajan
  */
-public class JogoAlugado implements JogoState{
+public class JogoAlugado implements JogoState {
 
-    private LocalDate dataDevolucao;
-
-    public JogoAlugado(LocalDate dataDevolucao) {
-        this.dataDevolucao = dataDevolucao;
-    }
+//    private LocalDate dataDevolucao;
+//
+//    public JogoAlugado(LocalDate dataDevolucao) {
+//        this.dataDevolucao = dataDevolucao;
+//    }
     
+    public JogoAlugado() {
+        
+    }
+
+    /**
+     *
+     * @return
+     * @throws JogoAlugadoException
+     */
     @Override
-    public JogoState alugar(LocalDate dataDevolucao){
-        try {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            throw new JogoAlugadoException("No momento o jogo já está alugado. Deverá retornar em: " + this.dataDevolucao.format(dtf));
-            
-        } catch (JogoAlugadoException ex) {
-            Logger.getLogger(JogoAlugado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return this;
+    public JogoState alugar() throws JogoAlugadoException{
+        throw new JogoAlugadoException();
     }
 
     @Override
@@ -41,5 +41,4 @@ public class JogoAlugado implements JogoState{
         return new JogoDisponivel();
     }
 
-        
 }

@@ -11,7 +11,7 @@ import br.edu.ifpb.patterngames.entity.state.JogoAlugado;
 import br.edu.ifpb.patterngames.entity.state.JogoDisponivel;
 import br.edu.ifpb.patterngames.entity.state.JogoState;
 import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
-import java.time.LocalDate;
+import br.edu.ifpb.patterngames.exceptions.JogoDisponivelException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +19,20 @@ import java.util.List;
  *
  * @author Natarajan
  */
-public class Jogo {
+public class Jogo implements Observable<Jogo> {
 
     protected JogoState estado;
     private Integer id;
     private String nome;
+    private String genero;
+
     private List<Observer<Jogo>> observers;
 
-    public Jogo(Integer id, String nome) {
+    public Jogo(Integer id, String nome, String genero) {
         this.id = id;
         this.nome = nome;
         this.estado = new JogoDisponivel();
+        this.genero = genero;
         this.observers = new ArrayList<>();
     }
 
@@ -45,6 +48,11 @@ public class Jogo {
         return nome;
     }
 
+    public String getGenero() {
+        return genero;
+    }
+    
+    
     public void setId(Integer id) {
         this.id = id;
     }
@@ -53,16 +61,48 @@ public class Jogo {
         this.nome = nome;
     }
 
-    public void alugar(LocalDate dataDevolucao) throws JogoAlugadoException {
-        this.estado = this.estado.alugar(dataDevolucao);
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 
-    public void devolver() throws JogoAlugadoException {
+    public JogoState getEstado() {
+        return estado;
+    }
+
+    public void setEstado(JogoState estado) {
+        this.estado = estado;
+    }
+
+//    public void alugar(LocalDate dataDevolucao) throws JogoAlugadoException {
+//        this.estado = this.estado.alugar(dataDevolucao);
+//    }
+    
+    public void alugar() throws JogoAlugadoException {
+        this.estado = this.estado.alugar();
+    }
+
+    public void devolver() throws JogoDisponivelException{
         this.estado = this.estado.devolver();
-    
+        for (Observer o : observers) 
+            notifyObservers(this);
     }
 
-    
+    @Override
+    public void addObserver(Observer newObserver) {
+        observers.add(newObserver);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Jogo o) {
+        for (Observer observer : observers) {
+            observer.update(o);
+        }
+    }
 
     @Override
     public String toString() {

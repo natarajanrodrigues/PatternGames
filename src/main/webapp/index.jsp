@@ -6,6 +6,7 @@
 
 <%@page import="java.util.Enumeration"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -93,6 +94,7 @@
                                 $("#alertaClienteSemCadastro").show(250);
                             } else {
                                 $(location).attr('href', 'home?cpf=' + $("#cpf").val());
+//                                $(location).attr('href', 'home');
                             }
                         } else {
                             $("#alertaCpfErro").html("O CPF informado <strong>não é válido</strong>").show(250);   

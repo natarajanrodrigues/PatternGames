@@ -15,6 +15,10 @@ import java.time.format.DateTimeFormatter;
  */
 public class JogoAlugadoException extends Exception{
 
+    public JogoAlugadoException(){
+        
+    }
+    
     public JogoAlugadoException(String message) {
         super(message);
     }

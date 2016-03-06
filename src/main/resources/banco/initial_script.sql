@@ -28,6 +28,7 @@ CREATE TABLE Cliente(
 CREATE TABLE Jogo(
     id SERIAL NOT NULL, 
     nome VARCHAR(100) NOT NULL,
+    genero VARCHAR(100) NOT NULL, 
     isDisponivel BOOLEAN DEFAULT TRUE,
     PRIMARY KEY(id)
 
@@ -52,17 +53,18 @@ CREATE TABLE Locacao(
     cpfCliente VARCHAR(14) NOT NULL,
     idJogo INTEGER NOT NULL, 
     dataLocacao DATE NOT NULL, 
-    dataDevolucao DATE NOT NULL, 
+    dataDevolucao DATE, 
     valorPago DOUBLE PRECISION DEFAULT 0, 
+    tipo INT NOT NULL, 
     PRIMARY KEY (id)
-
 );
 
 
 INSERT INTO TiposLocacao(id, nome) VALUES (1, 'COMUM');
 INSERT INTO TiposLocacao(id, nome) VALUES (2, 'ESPECIAL');
 
-INSERT INTO Jogo(nome) VALUES ('Donkey Kong');
-INSERT INTO Jogo(nome) VALUES ('Super Mario Bros');
-INSERT INTO Jogo(nome) VALUES ('Street Fighter IV - Alpha');
+INSERT INTO Jogo(nome, genero) VALUES ('Donkey Kong', 'aventura');
+INSERT INTO Jogo(nome, genero) VALUES ('Super Mario Bros', 'aventura');
+INSERT INTO Jogo(nome, genero) VALUES ('Mario Kart', 'corrida');
+INSERT INTO Jogo(nome, genero) VALUES ('Street Fighter IV - Alpha', 'luta');
 

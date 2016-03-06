@@ -6,6 +6,7 @@
 package br.edu.ifpb.patterngames.persistencia;
 
 import br.edu.ifpb.patterngames.entity.Jogo;
+import br.edu.ifpb.patterngames.entity.state.JogoAlugado;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.PreparedStatement;
@@ -34,6 +35,28 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
     public boolean alterar(Jogo objeto) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public boolean alugar(Jogo objeto) {
+        
+        try {
+
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+
+            String sql = "UPDATE Jogo SET isDisponivel = false WHERE id = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+
+            ps.setInt(1, objeto.getId());
+
+            if (ps.executeUpdate() > 0)
+                return true;
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return false;
+    }
 
     @Override
     public Jogo buscar(String key) {
@@ -47,7 +70,8 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             String sql = "SELECT * FROM Jogo WHERE id = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
-            ps.setString(1, key);
+            int idJogo = Integer.parseInt(key);
+            ps.setInt(1, idJogo);
 
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -66,13 +90,10 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
     @Override
     public List<Jogo> listarTodos() {
         try {
-
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
-
             String sql = "SELECT * FROM Jogo";
-
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -80,16 +101,56 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
 
             while (rs.next()) {
                 Jogo jogo = preencherJogo(rs);
-
                 jogos.add(jogo);
             }
 
             return jogos;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
-
             return null;
         }
+    }
+    
+    public boolean adicionarObservador(int idJogo, String cpfCliente){
+        try {
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+            String sql = "INSERT INTO Observacoes(idJogo, cpfCliente) VALUES (?, ?)";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            
+            ps.setInt(1, idJogo);
+            ps.setString(2, cpfCliente);
+
+            
+            if (ps.executeUpdate() > 0)
+                return true;
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+    
+    public boolean removerObservador(int idJogo, String cpfCliente){
+        try {
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+            String sql = "DELETE FROM Observacoes WHERE idJogo = ? AND cpfCliente = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            
+            ps.setInt(1, idJogo);
+            ps.setString(2, cpfCliente);
+
+            
+            if (ps.executeUpdate() > 0)
+                return true;
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return false;
     }
 
     private Jogo preencherJogo(ResultSet rs) {
@@ -99,6 +160,10 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             jogo = new Jogo();
             jogo.setId(rs.getInt("id"));
             jogo.setNome(rs.getString("nome"));
+            jogo.setGenero(rs.getString("genero"));
+            if (!rs.getBoolean("isDisponivel")) {
+                jogo.setEstado(new JogoAlugado());
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();

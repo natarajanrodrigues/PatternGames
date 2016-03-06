@@ -18,10 +18,12 @@ public class JogoDisponivel implements JogoState{
     
     
     @Override
-    public JogoState alugar(LocalDate dataDevolucao) {
+//    public JogoState alugar(LocalDate dataDevolucao) {
+    public JogoState alugar() {
         
         System.out.println("O jogo está alugado agora. ");
-        return new JogoAlugado(dataDevolucao);
+//        return new JogoAlugado(dataDevolucao);
+        return new JogoAlugado();
     }
 
     @Override
