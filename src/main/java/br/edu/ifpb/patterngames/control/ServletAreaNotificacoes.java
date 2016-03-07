@@ -6,14 +6,11 @@
 package br.edu.ifpb.patterngames.control;
 
 import br.edu.ifpb.patterngames.entity.Cliente;
-import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
-import br.edu.ifpb.patterngames.model.LocacaoBo;
-import com.google.gson.Gson;
+import br.edu.ifpb.patterngames.entity.Jogo;
+import br.edu.ifpb.patterngames.model.JogoBo;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Natarajan
  */
-@WebServlet(name = "ServletAlugarJogo", urlPatterns = {"/ServletAlugarJogo"})
-public class ServletAlugarJogo extends HttpServlet {
+@WebServlet(name = "ServletAreaNotificacoes", urlPatterns = {"/ServletAreaNotificacoes"})
+public class ServletAreaNotificacoes extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,33 +40,16 @@ public class ServletAlugarJogo extends HttpServlet {
         
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
         
-        String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getParameter("idJogo");
+        //adicionar o jogos favoritados pelo cliente à sessão
+        List<Jogo> jogosCliente = new JogoBo().buscarJogosObservados(cliente.getCpf());
+        request.getSession().setAttribute("jogosCliente", jogosCliente);
         
-        request.getSession().setAttribute("idJogo", idJogo);
+        //buscar todos os jogos
+        List<Jogo> todosJogos = new JogoBo().buscarTodos();
+        todosJogos.removeAll(jogosCliente);
+        request.getSession().setAttribute("jogos", todosJogos);
         
-        Map<String, String> resultadoLocacao = new HashMap<>();
-        
-        boolean alugar = false;
-        try {
-            alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
-            
-            if (alugar) {
-                resultadoLocacao.put("alugou", "ok");
-            }
-            
-        } catch (JogoAlugadoException ex) {
-            Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
-            resultadoLocacao.put("alugou", "fail");
-            resultadoLocacao.put("erro", ex.getMessage());
-        }
-        
-        
-        String json = new Gson().toJson(resultadoLocacao);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-                
+        response.sendRedirect("notificacoes.jsp");
         
         
     }

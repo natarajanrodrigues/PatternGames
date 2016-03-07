@@ -14,6 +14,7 @@ import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
 import br.edu.ifpb.patterngames.exceptions.JogoDisponivelException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -117,5 +118,32 @@ public class Jogo implements Observable<Jogo> {
         }
         return sb.toString();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Jogo other = (Jogo) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

@@ -20,7 +20,7 @@
     <head>
         <meta charset="utf-8">
         <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
-        <title>Pattern Games - Home</title>
+        <title>Pattern Games - Devolução</title>
 
         <!-- Latest compiled and minified CSS -->
         <!--<link rel="stylesheet" href="./dist/css/bootstrap.min.css">-->
@@ -32,39 +32,21 @@
 
     </head>
     <body>
-        <%
-            Cliente cliente = (Cliente) session.getAttribute("cliente");
-        %>
+        
         <header style="padding-top: 100px">
-            <nav class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a href="./" class="navbar-brand">PatternGames</a>
-                    </div>
-
-                </div>
-            </nav>
+            <%@ include file="barra.jsp"%>
         </header>
 
 
         <div class="container">
 
             <div>   
-                <label>Cliente: </label> ${cliente.nome}
+                <label>Cliente: </label> ${cliente.nome} 
             </div>
-
-            <ul class="nav nav-tabs" id="navs_opcoes">
-                <li><a href="home" aria-controls="locação" >Locaçao</a></li>
-                <li class="active"><a href="#" aria-controls="devolução" >Devolução</a></li>
-            </ul>
+            <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
             <%
-                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(cliente.getCpf());
+                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(((Cliente)session.getAttribute("cliente")).getCpf());
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 DecimalFormat df = new DecimalFormat("#,###,##0.00");
                 JogoBo jogoBo = new JogoBo();
@@ -76,8 +58,8 @@
 
 
             %>
-            
-            
+
+
             <div class="" id="tab_opcoes">
 
                 <div role="tabpanel" class="tab-pane" id="devolucao">
@@ -119,6 +101,9 @@
     <script src="dist/js/jquery-2.1.4.min.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#liDevolucao").addClass("active");
+        });
 
     </script>
 </body>

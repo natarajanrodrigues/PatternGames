@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.patterngames.model;
 
+import br.edu.ifpb.patterngames.entity.Cliente;
 import br.edu.ifpb.patterngames.entity.Jogo;
 import br.edu.ifpb.patterngames.persistencia.JogoBdDao;
 import java.util.List;
@@ -19,14 +20,6 @@ public class JogoBo {
         return new JogoBdDao().buscar(idJogo);
     }
 
-    public boolean addObserverJogo(int idJogo, String cpfCliente) {
-        return new JogoBdDao().adicionarObservador(idJogo, cpfCliente);
-    }
-
-    public boolean removeObserverJogo(int idJogo, String cpfCliente) {
-        return new JogoBdDao().removerObservador(idJogo, cpfCliente);
-    }
-
     public List<Jogo> buscarTodos() {
         return new JogoBdDao().listarTodos();
     }
@@ -37,5 +30,13 @@ public class JogoBo {
     
     public boolean removerObserver(Integer idJogo, String cpfCliente){
         return new JogoBdDao().removerObservador(idJogo, cpfCliente);
+    }
+    
+    public List<Cliente> buscarObservers(Integer idJogo) {
+        return new JogoBdDao().buscarObservadores(idJogo);
+    }
+    
+    public List<Jogo> buscarJogosObservados(String cpfCliente) {
+        return new JogoBdDao().buscarJogosObservados(cpfCliente);
     }
 }

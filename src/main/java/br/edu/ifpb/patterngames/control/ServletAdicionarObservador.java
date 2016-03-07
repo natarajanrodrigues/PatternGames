@@ -42,9 +42,14 @@ public class ServletAdicionarObservador extends HttpServlet {
         String cpfCliente = cliente.getCpf();
         String idJogo = (String) request.getSession().getAttribute("idJogo");
         
+        if (idJogo == null){
+            idJogo = request.getParameter("idJogo");
+        }
+            
+        
         JogoBo jogoBo = new JogoBo();
         
-        if (jogoBo.addObserverJogo(Integer.parseInt(idJogo), cpfCliente)){
+        if (jogoBo.adicionarObserver(Integer.parseInt(idJogo), cpfCliente)){
             response.sendRedirect("home");
         }
         

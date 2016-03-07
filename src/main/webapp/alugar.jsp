@@ -32,36 +32,16 @@
 
     </head>
     <body>
-        <%
-            Cliente cliente = (Cliente) session.getAttribute("cliente");
-        %>
         <header style="padding-top: 100px">
-            <nav class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a href="./" class="navbar-brand">PatternGames</a>
-                    </div>
-
-                </div>
-            </nav>
+            <%@ include file="barra.jsp"%>
         </header>
-
 
         <div class="container">
 
-            <div>   
-                <label>Cliente: </label> ${cliente.nome}
+           <div>   
+                <label>Cliente: </label> ${cliente.nome} 
             </div>
-
-            <ul class="nav nav-tabs" id="navs_opcoes">
-                <li class="active"><a href="#" aria-controls="locação" >Locaçao</a></li>
-                <li><a href="devolucao.jsp" aria-controls="devolução" >Devolução</a></li>
-            </ul>
+            <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
 
             <div class="" id="locacao">
@@ -71,8 +51,7 @@
                         <div class="form-group has-feedback">
                             <label for="jogo" class="control-label">Escolha um jogo</label>
                             <select class="form-control" id="idJogo" name="idJogo"> 
-                                <%
-                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
+                                <%                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
                                     pageContext.setAttribute("games", jogos);
                                     try {
 
@@ -95,8 +74,8 @@
                                 <label>Deseja ser informado por email quando este jogo for devolvido?</label>
                                 <a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Avise-me</a>
                             </div>
-                                
-                                
+
+
                         </div>
                         <div id="alertaLocacaoSucesso" class="alert alert-success alert-dismissible" role="alert" hidden></div>
 
@@ -140,7 +119,12 @@
         }
 
         $('#btnAlugar').click(processaRequest);
-        
+
+        $(document).ready(function () {
+            $("#liHome").addClass("active");
+        });
+
+
 
     </script>
 </body>

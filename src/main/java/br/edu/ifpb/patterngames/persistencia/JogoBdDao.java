@@ -191,6 +191,32 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
         }
     }
     
+    public List<Jogo> buscarJogosObservados(String cpfCliente){
+        try {
+            List<Jogo> jogosDoCliente = new LinkedList<>();
+            ClienteBdDao clienteBdDao = new ClienteBdDao();
+            
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+            String sql = "SELECT * FROM Observacoes WHERE cpfCliente = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setString(1, cpfCliente);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                int idJogo = rs.getInt("idJogo");
+                jogosDoCliente.add(buscar(new Integer(idJogo).toString()));
+            }
+
+            return jogosDoCliente;
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
 
     private Jogo preencherJogo(ResultSet rs) {
         Jogo jogo;
