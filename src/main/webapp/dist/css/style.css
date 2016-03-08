@@ -1,0 +1,28 @@
+.toasty{
+	position: fixed;
+	left: 100%;
+	top: calc(100% - 250px);
+}
+
+.toasty.indo {
+	-webkit-transition: 0.6s;
+	-moz-transition: 0.6s;
+	-ms-transition: 0.6s;
+	-o-transition: 0.6s;
+	transition: 0.6s;
+  	-webkit-transform: translate(-250px, 0);
+	-ms-transform: translate(-250px, 0);
+	transform: translate(-250px, 0);
+	
+}
+
+.toasty.vindo{
+	-webkit-transition: 0.6s;
+	-moz-transition: 0.6s;
+	-ms-transition: 0.6s;
+	-o-transition: 0.6s;
+	transition: 0.6s;
+	-webkit-transform: translate(250px, 0);
+	-ms-transform: translate(250px, 0);
+	transform: translate(250px, 0);
+}

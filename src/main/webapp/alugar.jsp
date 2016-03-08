@@ -30,7 +30,7 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="dist/css/bootstrap-theme.min.css" type="text/css">
         <link rel="stylesheet" href="dist/css/bootstrap.min.css" type="text/css"/>
-
+        <link rel="stylesheet" href="dist/css/style.css" type="text/css"/>
 
     </head>
     <body>
@@ -91,10 +91,22 @@
 
         </div>
     </div>
-
+    <audio src="dist/mp3/mktoasty.mp3" id="mktoasty" preload="auto"></audio> 
+    <audio src="dist/mp3/corda.mp3" id="get_over_here" preload="auto"></audio>
+    <div class="toasty">
+        <img src="dist/img/toasty.png">
+    </div>
     <script src="dist/js/jquery-2.1.4.min.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+        var toasty = document.getElementsByClassName('toasty')[0];
+        function playToasty(){
+            document.getElementById("mktoasty").play();
+        }
+
+        function playBack(){
+            document.getElementById("get_over_here").play();
+        }
         function processaRequest() {
             event.preventDefault();
 
@@ -107,10 +119,17 @@
             $.post("ServletAlugarJogo", dados, function (responseGson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
 
                 var resultado = responseGson.alugou;
+                
 
                 if (resultado === "ok") {
 //                        $(location).attr('href', 'home');
                     $('#alertaLocacaoSucesso').show(250).text("Alugado com Sucesso");
+                    
+                    playToasty();
+                    toasty.classList.add('indo');
+                    setTimeout("playBack()",700);
+                    setTimeout("toasty.classList.add('vindo'), toasty.classList.remove('indo')",1500);
+                    setTimeout("toasty.classList.remove('vindo')",100);
                 } else {
                     var value = responseGson.erro;
 //                    $('#alertaErroLocacao').hide();
