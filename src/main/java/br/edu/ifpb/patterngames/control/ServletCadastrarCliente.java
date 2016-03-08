@@ -56,7 +56,8 @@ public class ServletCadastrarCliente extends HttpServlet {
 //                request.getRequestDispatcher("home.jsp?cpf=" + cpf).forward(request, response);
                 response.sendRedirect("home");
             } else {
-                out.print("<p>não cadastrou</p>");
+                //out.print("<p>não cadastrou</p>");
+                response.sendRedirect("erroCadastro.html");
             }
         } else {
             

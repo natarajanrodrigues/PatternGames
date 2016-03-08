@@ -61,6 +61,7 @@
                     <p class="help-block hidden"></p>
                 </div>
                 <input class="btn btn-primary" type="submit" value="Cadastrar">
+                <a href="index" class="btn btn-default">Cancelar</a>
             </form>
             <!--<btn href="" id="btnEntrar" form="formulario_cliente" type='submit' class="btn btn-primary">Entrar</btn>-->
 

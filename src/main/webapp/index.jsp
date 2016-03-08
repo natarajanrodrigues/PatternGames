@@ -52,7 +52,7 @@
                     </div>
                 </form>
 
-                <btn id="btnEntrar" form="formulario_cliente" type="submit" class="btn btn-primary">Entrar</btn>
+                <btn id="btnEntrar" form="formulario_cliente" type="submit" class="btn btn-primary">Inicar Atendimento</btn>
                 
             </div>
             
@@ -69,6 +69,13 @@
             </span>
 
         </div>
+        
+        <div class="col-md-4 col-md-offset-4" >
+            <hr>
+            <a href="cadastro" id="btnCadastrarNovo" class="btn btn-primary">Cadastrar Novo Usuário</a>
+        </div>
+        
+                
 
         <script src="dist/js/jquery-2.1.4.min.js"></script>
         <script src="dist/js/bootstrap.min.js"></script>
