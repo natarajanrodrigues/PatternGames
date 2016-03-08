@@ -37,6 +37,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             ps.setString(3, objeto.getEmail());
 
             if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
@@ -63,6 +64,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             ps.setString(3, objeto.getCpf());
             
             if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
@@ -85,6 +87,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             ps.setString(1, objeto.getCpf());
 
             if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
@@ -111,7 +114,9 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
             ResultSet rs = ps.executeQuery();
             if (rs != null && rs.next())
                 usuario = preencherCliente(rs);
-
+            
+            desconectar();
+            
             return usuario;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -140,7 +145,7 @@ public class ClienteBdDao extends GenericBdDao<Cliente, String> {
 
                 clientes.add(usuario);
             }
-
+            desconectar();
             return clientes;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();

@@ -54,7 +54,7 @@ public class ServletCadastrarCliente extends HttpServlet {
                 HttpSession sessao = request.getSession();
                 sessao.setAttribute("cliente", c);
 //                request.getRequestDispatcher("home.jsp?cpf=" + cpf).forward(request, response);
-                response.sendRedirect("home.jsp?cpf=" + cpf);
+                response.sendRedirect("home");
             } else {
                 out.print("<p>não cadastrou</p>");
             }

@@ -15,28 +15,33 @@ import java.util.List;
  * @author Natarajan
  */
 public class JogoBo {
+    
+    private JogoBdDao dao = new JogoBdDao();
 
     public Jogo buscarPorId(String idJogo) {
-        return new JogoBdDao().buscar(idJogo);
+        return dao.buscar(idJogo);
     }
 
     public List<Jogo> buscarTodos() {
-        return new JogoBdDao().listarTodos();
+        return dao.listarTodos();
     }
     
     public boolean adicionarObserver(Integer idJogo, String cpfCliente){
-        return new JogoBdDao().adicionarObservador(idJogo, cpfCliente);
+        List<Jogo> jogosCliente = buscarJogosObservados(cpfCliente);
+        if (jogosCliente.contains(buscarPorId(idJogo.toString())))
+            return true;
+        return dao.adicionarObservador(idJogo, cpfCliente);
     }
     
     public boolean removerObserver(Integer idJogo, String cpfCliente){
-        return new JogoBdDao().removerObservador(idJogo, cpfCliente);
+        return dao.removerObservador(idJogo, cpfCliente);
     }
     
     public List<Cliente> buscarObservers(Integer idJogo) {
-        return new JogoBdDao().buscarObservadores(idJogo);
+        return dao.buscarObservadores(idJogo);
     }
     
     public List<Jogo> buscarJogosObservados(String cpfCliente) {
-        return new JogoBdDao().buscarJogosObservados(cpfCliente);
+        return dao.buscarJogosObservados(cpfCliente);
     }
 }

@@ -50,12 +50,9 @@ public class Cliente implements Observer<Jogo> {
     }
 
     @Override
-    public void update(Jogo object) {
+    public void update(Jogo jogo) {
         System.out.println("Enviando email:");
-        //System.out.println("Caro Sr(a). " + getNome() + ", o jogo " + object.getNome() + " est́a dispońıvel para loca̧c̃ao! Corra agora para a Pattern Games para garantir sua jogatina!");
-        NotificacaoPorEmail.sendEmail(this.email, "Caro Sr(a). " + getNome() + ", o jogo " + object.getNome() + " está disponível para locação! Corra agora para a Pattern Games para garantir sua jogatina!");
-        
-
+        NotificacaoPorEmail.sendEmail(this.email, "Caro Sr(a). " + getNome() + ", o jogo " + jogo.getNome() + " está disponível para locação! Corra agora para a Pattern Games para garantir sua jogatina!");
     }
 
 }

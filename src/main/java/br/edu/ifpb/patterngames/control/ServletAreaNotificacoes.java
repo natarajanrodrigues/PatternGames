@@ -46,7 +46,8 @@ public class ServletAreaNotificacoes extends HttpServlet {
         
         //buscar todos os jogos
         List<Jogo> todosJogos = new JogoBo().buscarTodos();
-        todosJogos.removeAll(jogosCliente);
+        if (jogosCliente != null)
+            todosJogos.removeAll(jogosCliente);
         request.getSession().setAttribute("jogos", todosJogos);
         
         response.sendRedirect("notificacoes.jsp");

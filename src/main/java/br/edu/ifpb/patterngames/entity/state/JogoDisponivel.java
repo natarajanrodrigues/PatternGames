@@ -27,14 +27,8 @@ public class JogoDisponivel implements JogoState{
     }
 
     @Override
-    public JogoState devolver() {
-        System.out.println("O jogo já está disponível");
-        try {
-            throw new JogoDisponivelException();
-        } catch (JogoDisponivelException ex) {
-            Logger.getLogger(JogoDisponivel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return this;
+    public JogoState devolver() throws JogoDisponivelException{
+        throw new JogoDisponivelException();
     }
     
 }

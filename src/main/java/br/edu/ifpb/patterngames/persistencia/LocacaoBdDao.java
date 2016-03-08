@@ -26,7 +26,7 @@ import java.util.List;
 public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
 
     public Locacao procurarUltimaLocacao(int idJogo) {
-        
+        Locacao loc = null;
         try {
 
             if (getConnection() == null || getConnection().isClosed()) {
@@ -37,17 +37,17 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
             ps.setInt(1, idJogo);
-            
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return montarLocacao(rs);
+                loc = montarLocacao(rs);
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        
-        return null;
+        desconectar();
+        return loc;
     }
 
     @Override
@@ -71,9 +71,13 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
                 ps.setInt(4, TipoLocacao.COMUM.id);
             }
 
-            if (ps.executeUpdate() > 0) {
+            int resultUpdate = ps.executeUpdate();
+            desconectar();
+            
+            if (resultUpdate > 0) {
                 return true;
             }
+            
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
             return false;
@@ -81,8 +85,7 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
 
         return false;
     }
-    
-    
+
     public boolean finalizar(Integer idLocacao) {
         try {
 
@@ -94,12 +97,15 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
             Locacao loc = buscarPorId(idLocacao);
-            
+
             ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setDouble(2, loc.calcularValor().doubleValue());
             ps.setInt(3, idLocacao);
+
+            int resultUpdate = ps.executeUpdate();
+            desconectar();
             
-            if (ps.executeUpdate() > 0) {
+            if (resultUpdate > 0) {
                 return true;
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
@@ -120,7 +126,8 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Locacao buscarPorId(Integer idLocacao){
+    public Locacao buscarPorId(Integer idLocacao) {
+        Locacao loc = null;
         try {
 
             if (getConnection() == null || getConnection().isClosed()) {
@@ -129,23 +136,23 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
 
             String sql = "SELECT * FROM Locacao WHERE id = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
-            ps.setInt(1, idLocacao);            
+            ps.setInt(1, idLocacao);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return montarLocacao(rs);
+                loc =  montarLocacao(rs);
             }
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        
-        return null;
+
+        return loc;
     }
-    
+
     @Override
     public Locacao buscar(String key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public List<Locacao> buscarPorCliente(String cpfCliente) {
         List<Locacao> locs = new LinkedList<>();
         try {
@@ -156,15 +163,16 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
 
             String sql = "SELECT * FROM Locacao WHERE cpfCliente = ? AND dataDevolucao IS NULL";
             PreparedStatement ps = getConnection().prepareStatement(sql);
-            ps.setString(1, cpfCliente);            
+            ps.setString(1, cpfCliente);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 locs.add(montarLocacao(rs));
             }
+            desconectar();
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        
+
         return locs;
     }
 
@@ -172,7 +180,7 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
     public List<Locacao> listarTodos() {
         return null;
     }
-    
+
     private Locacao montarLocacao(ResultSet rs) {
         Locacao loc;
         try {
@@ -182,19 +190,18 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
             loc.setCpfCliente(rs.getString("cpfCliente"));
             loc.setIdJogo(new Integer(rs.getInt("idJogo")).toString());
             loc.setDataLocacao(rs.getDate("dataLocacao").toLocalDate());
-            
-            
+
             if (rs.getInt("tipo") == TipoLocacao.COMUM.id) {
                 loc.setStrategy(new LocacaoComum());
             } else {
                 loc.setStrategy(new LocacaoEspecial());
             }
-
+            
         } catch (SQLException ex) {
             ex.printStackTrace();
             loc = null;
         }
-
+        
         return loc;
     }
 

@@ -9,7 +9,7 @@ package br.edu.ifpb.patterngames.exceptions;
  *
  * @author Natarajan
  */
-public class JogoDisponivelException extends Exception {
+public class JogoDisponivelException extends RuntimeException {
 
     public JogoDisponivelException() {
         super("O jogo já está disponível. Não precisa executar operação de disponibilizar neste estado.");

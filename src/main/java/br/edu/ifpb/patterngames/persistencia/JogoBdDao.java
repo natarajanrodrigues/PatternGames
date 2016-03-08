@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Natarajan
  */
-public class JogoBdDao extends GenericBdDao<Jogo, String>{
+public class JogoBdDao extends GenericBdDao<Jogo, String> {
 
     @Override
     public boolean salvar(Jogo objeto) {
@@ -37,17 +37,17 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
     public boolean alterar(Jogo objeto) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public boolean alugar(Jogo objeto) {
         return setarStatus(objeto, false);
     }
-    
+
     public boolean devolver(Jogo objeto) {
         return setarStatus(objeto, true);
     }
-    
+
     private boolean setarStatus(Jogo jogo, boolean isDisponivel) {
-        
+
         try {
 
             if (getConnection() == null || getConnection().isClosed()) {
@@ -60,14 +60,19 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             ps.setBoolean(1, isDisponivel);
             ps.setInt(2, jogo.getId());
 
-            if (ps.executeUpdate() > 0)
+            if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
+            }
+
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+            desconectar();
             return false;
         }
+        desconectar();
         return false;
-    
+
     }
 
     @Override
@@ -89,16 +94,15 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             rs.next();
 
             jogo = preencherJogo(rs);
-
+            desconectar();
             return jogo;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
-
+            desconectar();
             return null;
         }
     }
-    
-    
+
     @Override
     public List<Jogo> listarTodos() {
         try {
@@ -115,108 +119,112 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
                 Jogo jogo = preencherJogo(rs);
                 jogos.add(jogo);
             }
-
+            desconectar();
             return jogos;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+            desconectar();
             return null;
         }
     }
-    
-    public boolean adicionarObservador(Integer idJogo, String cpfCliente){
+
+    public boolean adicionarObservador(Integer idJogo, String cpfCliente) {
         try {
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
             String sql = "INSERT INTO Observacoes(idJogo, cpfCliente) VALUES (?, ?)";
             PreparedStatement ps = getConnection().prepareStatement(sql);
-            
+
             ps.setInt(1, idJogo);
             ps.setString(2, cpfCliente);
 
-            
-            if (ps.executeUpdate() > 0)
+            if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
+            }
+
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         }
+        desconectar();
         return false;
     }
-    
-    public boolean removerObservador(Integer idJogo, String cpfCliente){
+
+    public boolean removerObservador(Integer idJogo, String cpfCliente) {
         try {
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
             String sql = "DELETE FROM Observacoes WHERE idJogo = ? AND cpfCliente = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
-            
+
             ps.setInt(1, idJogo);
             ps.setString(2, cpfCliente);
 
-            
-            if (ps.executeUpdate() > 0)
+            if (ps.executeUpdate() > 0) {
+                desconectar();
                 return true;
+            }
+
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         }
+        desconectar();
         return false;
+
     }
-    
-    
+
     public List<Cliente> buscarObservadores(Integer idJogo) {
         try {
             List<Cliente> observadores = new LinkedList<>();
             ClienteBdDao clienteBdDao = new ClienteBdDao();
-            
+
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
             String sql = "SELECT * FROM Observacoes WHERE idJogo = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setInt(1, idJogo);
-            
+
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 observadores.add(clienteBdDao.buscar(rs.getString("cpfCliente")));
             }
-
+            desconectar();
             return observadores;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
             return null;
         }
     }
-    
-    public List<Jogo> buscarJogosObservados(String cpfCliente){
+
+    public List<Jogo> buscarJogosObservados(String cpfCliente) {
         try {
             List<Jogo> jogosDoCliente = new LinkedList<>();
             ClienteBdDao clienteBdDao = new ClienteBdDao();
-            
+
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
             }
             String sql = "SELECT * FROM Observacoes WHERE cpfCliente = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setString(1, cpfCliente);
-            
+
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 int idJogo = rs.getInt("idJogo");
                 jogosDoCliente.add(buscar(new Integer(idJogo).toString()));
             }
-
+            desconectar();
             return jogosDoCliente;
         } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
             return null;
         }
     }
-    
 
     private Jogo preencherJogo(ResultSet rs) {
         Jogo jogo;
@@ -230,7 +238,7 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
                 jogo.setEstado(new JogoAlugado());
             }
             List<Cliente> observadores = buscarObservadores(jogo.getId());
-            for (Cliente c : observadores){
+            for (Cliente c : observadores) {
                 jogo.addObserver(c);
             }
 
@@ -241,6 +249,5 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
 
         return jogo;
     }
-    
-    
+
 }

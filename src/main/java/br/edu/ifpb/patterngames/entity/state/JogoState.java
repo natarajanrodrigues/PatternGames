@@ -6,7 +6,7 @@
 package br.edu.ifpb.patterngames.entity.state;
 
 import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
-import java.time.LocalDate;
+import br.edu.ifpb.patterngames.exceptions.JogoDisponivelException;
 
 /**
  *
@@ -17,6 +17,6 @@ public interface JogoState {
 //    public JogoState alugar(LocalDate dataDevolucao);
     public JogoState alugar() throws JogoAlugadoException;
     
-    public JogoState devolver();
+    public JogoState devolver() throws JogoDisponivelException;
     
 }

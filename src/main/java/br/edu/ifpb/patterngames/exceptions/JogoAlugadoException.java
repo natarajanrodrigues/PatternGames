@@ -5,15 +5,11 @@
  */
 package br.edu.ifpb.patterngames.exceptions;
 
-import br.edu.ifpb.patterngames.entity.Locacao;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 /**
  *
  * @author Natarajan
  */
-public class JogoAlugadoException extends Exception{
+public class JogoAlugadoException extends RuntimeException{
 
     public JogoAlugadoException(){
         

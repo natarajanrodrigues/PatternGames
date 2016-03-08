@@ -68,6 +68,7 @@ public class ServletFinalizarLocacao extends HttpServlet {
             processRequest(request, response);
         } catch (JogoDisponivelException ex) {
             Logger.getLogger(ServletFinalizarLocacao.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendRedirect("home");
         }
     }
 
@@ -86,6 +87,7 @@ public class ServletFinalizarLocacao extends HttpServlet {
             processRequest(request, response);
         } catch (JogoDisponivelException ex) {
             Logger.getLogger(ServletFinalizarLocacao.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendRedirect("home");
         }
     }
 

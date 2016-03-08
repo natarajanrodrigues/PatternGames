@@ -18,19 +18,21 @@ import java.util.Map;
  * @author Natarajan
  */
 public class ClienteBo {
+    
+    private ClienteBdDao dao = new ClienteBdDao();
 
 //    private ClienteBdDao clienteBdDao;
     public boolean adicionarCliente(Cliente c) {
 
-        return new ClienteBdDao().salvar(c);
+        return dao.salvar(c);
     }
 
     public Cliente buscarPorCPF(String cpf) {
-        return new ClienteBdDao().buscar(cpf);
+        return dao.buscar(cpf);
     }
 
     public Cliente buscar(String nome, String cpf, String email) {
-        Cliente c = new ClienteBdDao().buscar(cpf);
+        Cliente c = dao.buscar(cpf);
 
         if (c == null) {
             c = new Cliente(nome, cpf, email);

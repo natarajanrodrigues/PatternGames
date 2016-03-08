@@ -23,24 +23,23 @@ import java.util.logging.Logger;
  */
 public class LocacaoBo {
 
+    private JogoBdDao       daoJogo     = new JogoBdDao();
+    private LocacaoBdDao    daoLocacao  = new LocacaoBdDao();
+    
     public boolean realizarLocacao(String idJogo, String cpfCliente) throws JogoAlugadoException {
         LocalDate dtPrevista = null;
-        Jogo jogo = new JogoBdDao().buscar(idJogo);
+        Jogo jogo = daoJogo.buscar(idJogo);
 
         boolean retorno = false;
         try {
             jogo.alugar();
             //chamar JogoBdDao para setar o jogo como alugado no banco
-            boolean salvouAluguelJogo = new JogoBdDao().alugar(jogo);
-            if (salvouAluguelJogo) {
-                LocacaoBdDao locacaoBdDao = new LocacaoBdDao();
-                if (locacaoBdDao.salvar(new Locacao(cpfCliente, idJogo))) {
-                    return true;
-                }
+            if (daoJogo.alugar(jogo)) {
+                return daoLocacao.salvar(new Locacao(cpfCliente, idJogo));
             }
         } catch (JogoAlugadoException ex) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            Locacao ultimaLocacaoDoJogo = new LocacaoBdDao().procurarUltimaLocacao(jogo.getId());
+            Locacao ultimaLocacaoDoJogo = daoLocacao.procurarUltimaLocacao(jogo.getId());
             if (ultimaLocacaoDoJogo != null)
                 dtPrevista = LocalDate.now().plusDays(ultimaLocacaoDoJogo.getStrategy().getDURACAO());
             throw new JogoAlugadoException("No momento o jogo já está alugado. Deverá retornar em: " + dtPrevista.format(dtf));
@@ -49,23 +48,17 @@ public class LocacaoBo {
     }
 
     public boolean finalizarLocacao(Integer idLocacao) throws JogoDisponivelException {
-        Locacao loc = new LocacaoBdDao().buscarPorId(idLocacao);
-        Jogo jogo = new JogoBdDao().buscar(loc.getIdJogo());
+        Locacao loc = daoLocacao.buscarPorId(idLocacao);
+        Jogo jogo   = daoJogo.buscar(loc.getIdJogo());
 
-        if (new JogoBdDao().devolver(jogo)) {
-            try {
-                jogo.devolver();
-
-            } catch (JogoDisponivelException ex) {
-                throw new JogoDisponivelException();
-            }
-
-            return new LocacaoBdDao().finalizar(idLocacao);
+        if (daoJogo.devolver(jogo)) {
+            jogo.devolver();
+            return daoLocacao.finalizar(idLocacao);
         }
         return false;
     }
 
     public List<Locacao> buscarPorCliente(String cpfCliente) {
-        return new LocacaoBdDao().buscarPorCliente(cpfCliente);
+        return daoLocacao.buscarPorCliente(cpfCliente);
     }
 }

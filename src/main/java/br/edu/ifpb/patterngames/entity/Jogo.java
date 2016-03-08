@@ -85,8 +85,7 @@ public class Jogo implements Observable<Jogo> {
 
     public void devolver() throws JogoDisponivelException{
         this.estado = this.estado.devolver();
-        for (Observer o : observers) 
-            notifyObservers(this);
+        notifyObservers(this);
     }
 
     @Override
