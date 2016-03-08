@@ -64,7 +64,7 @@
                     <h4>Não há cliente com o cpf informado.</h4>
                     <h5>Deseja cadastra-lo?</h5>
                     
-                    <a id="btnCadastrar" href="cadastro.jsp?cpf=" class="btn btn-primary">Cadastrar</a>'
+                    <a id="btnCadastrar" href="cadastro?cpf=" class="btn btn-primary">Cadastrar</a>'
                 </div>
             </span>
 
@@ -90,11 +90,10 @@
 
                         if (cpf === "verificado"){
                             if (responseJson.operacao === "clienteNãoExiste"){
-                                $("#btnCadastrar").attr("href", 'cadastro.jsp?cpf=' + $("#cpf").val());
+                                $("#btnCadastrar").attr("href", 'cadastro?cpf=' + $("#cpf").val());
                                 $("#alertaClienteSemCadastro").show(250);
                             } else {
                                 $(location).attr('href', 'ServletIniciarAtendimento?cpf=' + $("#cpf").val());
-//                                $(location).attr('href', 'home');
                             }
                         } else {
                             $("#alertaCpfErro").html("O CPF informado <strong>não é válido</strong>").show(250);   

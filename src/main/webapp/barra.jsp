@@ -30,8 +30,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li id="liHome"><a href="home" aria-controls="locação" >Locaçao</a></li>
-                    <li id="liDevolucao"><a href="devolucao.jsp" aria-controls="devolução" >Devolução</a></li>
+                    <li id="liHome"><a href="home" aria-controls="locação" >Locação</a></li>
+                    <li id="liDevolucao"><a href="devolucao" aria-controls="devolução" >Devolução</a></li>
                     <li id="liNotificacoes"><a href="ServletAreaNotificacoes" aria-controls="devolução" >Notificações</a></li>
                 </ul>
             </div>

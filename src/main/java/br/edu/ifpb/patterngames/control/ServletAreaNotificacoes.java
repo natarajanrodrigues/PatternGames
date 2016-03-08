@@ -10,6 +10,8 @@ import br.edu.ifpb.patterngames.entity.Jogo;
 import br.edu.ifpb.patterngames.model.JogoBo;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,15 +44,18 @@ public class ServletAreaNotificacoes extends HttpServlet {
         
         //adicionar o jogos favoritados pelo cliente à sessão
         List<Jogo> jogosCliente = new JogoBo().buscarJogosObservados(cliente.getCpf());
+        
+        Collections.sort(jogosCliente, Jogo.Comparators.NOME);
         request.getSession().setAttribute("jogosCliente", jogosCliente);
         
         //buscar todos os jogos
         List<Jogo> todosJogos = new JogoBo().buscarTodos();
         if (jogosCliente != null)
             todosJogos.removeAll(jogosCliente);
+        Collections.sort(todosJogos, Jogo.Comparators.NOME);
         request.getSession().setAttribute("jogos", todosJogos);
         
-        response.sendRedirect("notificacoes.jsp");
+        response.sendRedirect("notificacoes");
         
         
     }

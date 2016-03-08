@@ -9,8 +9,7 @@
     <servlet>
         <servlet-name>index</servlet-name>
         <jsp-file>/index.jsp</jsp-file>
-    </servlet>
-    
+    </servlet> 
     <servlet-mapping>
         <servlet-name>index</servlet-name>
         <url-pattern>/index</url-pattern>
@@ -19,13 +18,37 @@
     <servlet>
         <servlet-name>home</servlet-name>
         <jsp-file>/alugar.jsp</jsp-file>
-    </servlet>
-    
+    </servlet>    
     <servlet-mapping>
         <servlet-name>home</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>devolver</servlet-name>
+        <jsp-file>/devolucao.jsp</jsp-file>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>devolver</servlet-name>
+        <url-pattern>/devolucao</url-pattern>
+    </servlet-mapping>
     
+    <servlet>
+        <servlet-name>notificacoes</servlet-name>
+        <jsp-file>/notificacoes.jsp</jsp-file>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>notificacoes</servlet-name>
+        <url-pattern>/notificacoes</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>cadastro</servlet-name>
+        <jsp-file>/cadastro.jsp</jsp-file>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>cadastro</servlet-name>
+        <url-pattern>/cadastro</url-pattern>
+    </servlet-mapping>
         
 </web-app>

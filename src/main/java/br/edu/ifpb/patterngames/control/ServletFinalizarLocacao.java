@@ -46,7 +46,7 @@ public class ServletFinalizarLocacao extends HttpServlet {
         Integer idLocacao = Integer.parseInt(numb);
         
         if (new LocacaoBo().finalizarLocacao(idLocacao)){
-            response.sendRedirect("home");
+            response.sendRedirect("devolucao");
         }
         
         

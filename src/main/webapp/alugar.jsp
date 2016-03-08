@@ -46,7 +46,7 @@
 
             <div class="" id="locacao">
                 <div class="col-md-6 col-md-offset-3" >
-                    <h2><strong>Locação de jogo</strong></h2>
+                    <h2 class="text-center"><strong>Locação de jogo</strong></h2>
                     <form action="ServletAlugarJogo" id="formJogo" method="post">
                         <div class="form-group has-feedback">
                             <label for="jogo" class="control-label">Escolha um jogo</label>

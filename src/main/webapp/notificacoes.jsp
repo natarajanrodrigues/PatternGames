@@ -45,52 +45,61 @@
             <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
 
+            <c:if test="${!empty jogosCliente}">
+                <div class="" id="consultarRemoverNotificacoes">
+                    <div class="col-md-6 col-md-offset-3" >
+                        <h2 class="text-center"><strong>Minhas notificações</strong></h2>
 
-            <div class="" id="consultarRemoverNotificacoes">
-                <div class="col-md-6 col-md-offset-3" >
-                    <h2><strong>Minhas notificações</strong></h2>
-                    
-                    <table class="table table-bordered table-hover table-selectable">
-                        <thead>
-                            <tr class="alert-info text-center">
-                                <th id="tableHeadJogo"class="text-center">idJogo</th>
-                                <th id="tableHeadJogo"class="text-center">Jogo</th>
-                                <th id="tableHeadOperacao" class="text-center">Operações</th>
-                            </tr>
-                        </thead>
-
-
-                        <tbody id="locacoesCliente" class="searchable">
-                            <c:forEach var="jogo" items="${jogosCliente}">
-                                <tr>
-                                    <td class="text-center">${jogo.id}</td>
-                                    <td class="text-center">${jogo.nome}</td>
-                                    <td class="text-center"> <a title="Remover notificações deste jogo" href="ServletRemoverObservador?idJogo=${jogo.id}" class="btn btn-xs"><span class="glyphicon glyphicon-trash"></span></a></td>
+                        <table class="table table-bordered table-hover table-selectable">
+                            <thead>
+                                <tr class="alert-info text-center">
+                                    <th id="tableHeadJogo"class="text-center">idJogo</th>
+                                    <th id="tableHeadJogo"class="text-center">Jogo</th>
+                                    <th id="tableHeadOperacao" class="text-center">Operações</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-md-offset-3" >
-                    <h2><strong>Adicionar Jogos a Notificar</strong></h2>
-                    <form action="ServletAdicionarObservador" id="formJogo" method="post">
-                        <div class="form-group has-feedback">
-                            <label for="jogo" class="control-label">Escolha um jogo</label>
-                            <select class="form-control" id="idJogo" name="idJogo"> 
-                                <c:forEach var="j" items="${jogos}">
-                                    <option value="${j.id}"> ${j.nome}</option>
+                            </thead>
+
+
+                            <tbody id="locacoesCliente" class="searchable">
+                                <c:forEach var="jogo" items="${jogosCliente}">
+                                    <tr>
+                                        <td class="text-center">${jogo.id}</td>
+                                        <td class="text-center">${jogo.nome}</td>
+                                        <td class="text-center"> <a title="Remover notificações deste jogo" href="ServletRemoverObservador?idJogo=${jogo.id}" class="btn btn-xs"><span class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
                                 </c:forEach>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <!--<a id="btnObserver" form="formJogo" type="submit" class="btn btn-primary">Adicionar Jogo</a>-->
-                            <!--<a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Adicionar</a>-->
-                            <input type="submit" form="formJogo" id="btnAdd" class="btn btn-primary" value="Adicionar">
-                        </div>
-                    </form>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+            </c:if>
+
+
+
+            <c:if test="${!empty jogos}">
+                <div class="container-fluid">
+                    <div class="col-md-6 col-md-offset-3" >
+                        <h2 class="text-center"><strong>Adicionar Jogos a Notificar</strong></h2>
+                        <form action="ServletAdicionarObservador" id="formJogo" method="post">
+                            <div class="form-group has-feedback">
+                                <label for="jogo" class="control-label">Escolha um jogo</label>
+                                <select class="form-control" id="idJogo" name="idJogo"> 
+                                    <c:forEach var="j" items="${jogos}">
+                                        <option value="${j.id}"> ${j.nome}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <!--<a id="btnObserver" form="formJogo" type="submit" class="btn btn-primary">Adicionar Jogo</a>-->
+                                <!--<a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Adicionar</a>-->
+                                <input type="submit" form="formJogo" id="btnAdd" class="btn btn-primary" value="Adicionar">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </c:if>
+
 
         </div>
     </div>

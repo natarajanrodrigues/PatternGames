@@ -41,7 +41,7 @@ public class LocacaoBo {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             Locacao ultimaLocacaoDoJogo = daoLocacao.procurarUltimaLocacao(jogo.getId());
             if (ultimaLocacaoDoJogo != null)
-                dtPrevista = LocalDate.now().plusDays(ultimaLocacaoDoJogo.getStrategy().getDURACAO());
+                dtPrevista = LocalDate.now().plusDays(ultimaLocacaoDoJogo.getStrategy().getDURACAO() + 1);
             throw new JogoAlugadoException("No momento o jogo já está alugado. Deverá retornar em: " + dtPrevista.format(dtf));
         }
         return false;

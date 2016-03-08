@@ -12,7 +12,9 @@ import br.edu.ifpb.patterngames.entity.state.JogoDisponivel;
 import br.edu.ifpb.patterngames.entity.state.JogoState;
 import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
 import br.edu.ifpb.patterngames.exceptions.JogoDisponivelException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +22,7 @@ import java.util.Objects;
  *
  * @author Natarajan
  */
-public class Jogo implements Observable<Jogo> {
+public class Jogo implements Observable<Jogo>, Serializable{
 
     protected JogoState estado;
     private Integer id;
@@ -143,6 +145,9 @@ public class Jogo implements Observable<Jogo> {
         return true;
     }
     
+    public static class Comparators {
+        public static final Comparator<Jogo> NOME = (Jogo j1, Jogo j2) -> j1.getNome().compareTo(j2.getNome());
+    }
     
 
 }

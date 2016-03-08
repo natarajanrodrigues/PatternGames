@@ -40,7 +40,7 @@ public class ServletAdicionarObservador extends HttpServlet {
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
         
         String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getSession().getAttribute("idJogo");
+        String idJogo = (String) request.getParameter("idJogo");
         
         if (idJogo == null){
             idJogo = request.getParameter("idJogo");
@@ -50,7 +50,7 @@ public class ServletAdicionarObservador extends HttpServlet {
         JogoBo jogoBo = new JogoBo();
         
         if (jogoBo.adicionarObserver(Integer.parseInt(idJogo), cpfCliente)){
-            response.sendRedirect("home");
+            response.sendRedirect("ServletAreaNotificacoes");
         }
         
         

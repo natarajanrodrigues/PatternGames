@@ -7,9 +7,7 @@ package br.edu.ifpb.patterngames.control;
 
 import br.edu.ifpb.patterngames.entity.Cliente;
 import br.edu.ifpb.patterngames.model.JogoBo;
-import br.edu.ifpb.patterngames.model.LocacaoBo;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -32,7 +32,7 @@
 
     </head>
     <body>
-        
+
         <header style="padding-top: 100px">
             <%@ include file="barra.jsp"%>
         </header>
@@ -45,8 +45,7 @@
             </div>
             <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
-            <%
-                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(((Cliente)session.getAttribute("cliente")).getCpf());
+            <%                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(((Cliente) session.getAttribute("cliente")).getCpf());
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 DecimalFormat df = new DecimalFormat("#,###,##0.00");
                 JogoBo jogoBo = new JogoBo();
@@ -59,42 +58,50 @@
 
             %>
 
+            <c:if test="${!empty locacoesCliente}">
+                <div class="" id="tab_opcoes">
 
-            <div class="" id="tab_opcoes">
+                    <div role="tabpanel" class="tab-pane" id="devolucao">
 
-                <div role="tabpanel" class="tab-pane" id="devolucao">
+                        <div class="col-md-6 col-md-offset-3" >
+                            <h2 class="text-center"><strong>Devolução de jogo</strong></h2>
 
-                    <div class="col-md-6 col-md-offset-3" >
-                        <h2><strong>Devolução de jogo</strong></h2>
-
-                        <table class="table table-bordered table-hover table-selectable">
-                            <thead>
-                                <tr class="alert-info text-center">
-                                    <th id="tableHeadJogo"class="text-center">idLoc</th>
-                                    <th id="tableHeadJogo"class="text-center">Jogo</th>
-                                    <th id="tableHeadData" class="text-center">Data locação</th>
-                                    <th id="tableHeadValorPagar" class="text-center">Total a pagar (R$)</th>
-                                    <th id="tableHeadOperacao" class="text-center">Operações</th>
-                                </tr>
-                            </thead>
-
-
-                            <tbody id="locacoesCliente" class="searchable">
-                                <c:forEach var="loc" items="${locacoesCliente}">
-                                    <tr>
-                                        <td class="text-center">${loc.id}</td>
-                                        <td class="text-center">${myJogoBo.buscarPorId(loc.idJogo).nome}</td>
-                                        <td class="text-center">${loc.dataLocacao.format(dtformat)}</td>
-                                        <td class="text-center">${decformat.format(loc.calcularValor())}</td>
-                                        <td class="text-center"> <a title="Devolver este jogo" href="ServletFinalizarLocacao?idLocacao=${loc.id}" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></a></td>
+                            <table class="table table-bordered table-hover table-selectable">
+                                <thead>
+                                    <tr class="alert-info text-center">
+                                        <th id="tableHeadJogo"class="text-center">idLoc</th>
+                                        <th id="tableHeadJogo"class="text-center">Jogo</th>
+                                        <th id="tableHeadData" class="text-center">Data locação</th>
+                                        <th id="tableHeadValorPagar" class="text-center">Total a pagar (R$)</th>
+                                        <th id="tableHeadOperacao" class="text-center">Operações</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                </thead>
 
-            </div>
+
+                                <tbody id="locacoesCliente" class="searchable">
+                                    <c:forEach var="loc" items="${locacoesCliente}">
+                                        <tr>
+                                            <td class="text-center">${loc.id}</td>
+                                            <td class="text-center">${myJogoBo.buscarPorId(loc.idJogo).nome}</td>
+                                            <td class="text-center">${loc.dataLocacao.format(dtformat)}</td>
+                                            <td class="text-center">${decformat.format(loc.calcularValor())}</td>
+                                            <td class="text-center"> <a title="Devolver este jogo" href="ServletFinalizarLocacao?idLocacao=${loc.id}" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span></a></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </c:if>
+            <c:if test="${empty locacoesCliente}">
+                <div class="container-fluid">
+                    <div class="col-md-6 col-md-offset-3 text-center" >
+                        <h3>Não há locações deste cliente</h3>
+                    </div>
+                </div>                
+            </c:if>
         </div>
     </div>
 
