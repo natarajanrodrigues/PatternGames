@@ -43,7 +43,7 @@
                 <!--onKeyPress="MascaraCPF(formulario_cliente.cpf);"--> 
                 <div class="form-group has-feedback">
                     <label for="cpf" class="control-label">CPF</label>
-                    <input type="text" id="cpf" class="form-control" name="cpf" title="Digite um número de CPF no formato 000.000.000-00." onKeyPress="MascaraCPF(formulario_cliente.cpf);" placeholder="000.000.000-00" required value=${param.cpf}>
+                    <input type="text" id="cpf" class="form-control" name="cpf" title="Digite um número de CPF no formato 000.000.000-00." onKeyPress="MascaraCPF(formulario_cliente.cpf);" placeholder="000.000.000-00" required maxlength="14" value=${param.cpf}>
 
                     <p class="help-block hidden"></p>
                 </div>

@@ -51,10 +51,8 @@ public class ServletAntendimento extends HttpServlet {
             Cliente c = new ClienteBo().buscarPorCPF(cpf);
             // se o cliente já está cadastrado
             if (c != null) {
-//                request.setAttribute("cliente", c);
-//                request.getRequestDispatcher("home");
                 request.getSession().setAttribute("cliente", c);
-            } else {
+            } else { //caso contrário
                 resultado.put("operacao", "clienteNãoExiste");
             }
         } else {
@@ -69,14 +67,6 @@ public class ServletAntendimento extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
 
-//        
-//        if (c == null) {
-//            request.setAttribute("operacao", "cadastrar");
-//            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-//            rd.forward(request, response);
-//        } else {
-//            response.getWriter().print("OK");
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

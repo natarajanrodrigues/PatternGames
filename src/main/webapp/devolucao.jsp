@@ -45,7 +45,9 @@
             </div>
             <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
-            <%                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(((Cliente) session.getAttribute("cliente")).getCpf());
+            <%                
+                
+                List<Locacao> locsCliente = new LocacaoBo().buscarPorCliente(((Cliente) session.getAttribute("cliente")).getCpf());
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 DecimalFormat df = new DecimalFormat("#,###,##0.00");
                 JogoBo jogoBo = new JogoBo();

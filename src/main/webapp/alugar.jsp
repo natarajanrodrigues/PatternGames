@@ -4,6 +4,8 @@
     Author     : Natarajan 
 --%>
 
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Collection"%>
 <%@page import="br.edu.ifpb.patterngames.entity.Cliente"%>
 <%@page import="br.edu.ifpb.patterngames.model.JogoBo"%>
 <%@page import="java.text.DecimalFormat"%>
@@ -50,8 +52,10 @@
                     <form action="ServletAlugarJogo" id="formJogo" method="post">
                         <div class="form-group has-feedback">
                             <label for="jogo" class="control-label">Escolha um jogo</label>
-                            <select class="form-control" id="idJogo" name="idJogo"> 
-                                <%                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
+                            <select class="form-control" id="idJogo" name="idJogo" autofocus="true"> 
+                                <%                                    
+                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
+                                    Collections.sort(jogos, Jogo.Comparators.NOME);
                                     pageContext.setAttribute("games", jogos);
                                     try {
 

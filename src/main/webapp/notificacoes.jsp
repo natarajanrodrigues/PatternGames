@@ -44,7 +44,29 @@
             </div>
             <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
 
-
+            <c:if test="${!empty jogos}">
+                <div class="container-fluid">
+                    <div class="col-md-6 col-md-offset-3" >
+                        <h2 class="text-center"><strong>Adicionar Jogos a Notificar</strong></h2>
+                        <form action="ServletAdicionarObservador" id="formJogo" method="post">
+                            <div class="form-group has-feedback">
+                                <label for="jogo" class="control-label">Escolha um jogo</label>
+                                <select class="form-control" id="idJogo" name="idJogo" autofocus="true"> 
+                                    <c:forEach var="j" items="${jogos}">
+                                        <option value="${j.id}"> ${j.nome}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <!--<a id="btnObserver" form="formJogo" type="submit" class="btn btn-primary">Adicionar Jogo</a>-->
+                                <!--<a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Adicionar</a>-->
+                                <input type="submit" form="formJogo" id="btnAdd" class="btn btn-primary" value="Adicionar">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </c:if>
+            
             <c:if test="${!empty jogosCliente}">
                 <div class="" id="consultarRemoverNotificacoes">
                     <div class="col-md-6 col-md-offset-3" >
@@ -72,32 +94,6 @@
                         </table>
                     </div>
                 </div>
-            </c:if>
-
-
-
-            <c:if test="${!empty jogos}">
-                <div class="container-fluid">
-                    <div class="col-md-6 col-md-offset-3" >
-                        <h2 class="text-center"><strong>Adicionar Jogos a Notificar</strong></h2>
-                        <form action="ServletAdicionarObservador" id="formJogo" method="post">
-                            <div class="form-group has-feedback">
-                                <label for="jogo" class="control-label">Escolha um jogo</label>
-                                <select class="form-control" id="idJogo" name="idJogo"> 
-                                    <c:forEach var="j" items="${jogos}">
-                                        <option value="${j.id}"> ${j.nome}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <!--<a id="btnObserver" form="formJogo" type="submit" class="btn btn-primary">Adicionar Jogo</a>-->
-                                <!--<a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Adicionar</a>-->
-                                <input type="submit" form="formJogo" id="btnAdd" class="btn btn-primary" value="Adicionar">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
             </c:if>
 
 
