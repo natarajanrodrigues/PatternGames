@@ -6,6 +6,7 @@
 package br.edu.ifpb.patterngames.entity;
 
 import br.edu.ifpb.patterngames.entity.observer.Observer;
+import br.edu.ifpb.patterngames.entity.observer.NotificacaoPorEmail;
 
 /**
  *
@@ -51,21 +52,9 @@ public class Cliente implements Observer<Jogo> {
     @Override
     public void update(Jogo object) {
         System.out.println("Enviando email:");
-        System.out.println("Caro Sr(a). " + getNome() + ", o jogo " + object.getNome() + " est́a dispońıvel para loca̧c̃ao! Corra agora para a Pattern Games para garantir sua jogatina!");
-
-//        SessionProvider session = AuthenticatedSessionProvider.host("my.mail.host").tlsAuth("user", "pass");
-//
-//        EmailBody body = EmailBody.builder()
-//                .content("This is my email body")
-//                .build();
-//
-//        Email.session(session)
-//                .from(new InternetAddress("from@myaddress.com"))
-//                .to(new InternetAddress("target@theiraddress.com"))
-//                .subject("Hello world")
-//                .body(body)
-//                .build()
-//                .send();
+        //System.out.println("Caro Sr(a). " + getNome() + ", o jogo " + object.getNome() + " est́a dispońıvel para loca̧c̃ao! Corra agora para a Pattern Games para garantir sua jogatina!");
+        NotificacaoPorEmail.sendEmail(this.email, "Caro Sr(a). " + getNome() + ", o jogo " + object.getNome() + " está disponível para locação! Corra agora para a Pattern Games para garantir sua jogatina!");
+        
 
     }
 
