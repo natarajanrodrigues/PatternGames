@@ -40,7 +40,7 @@ public class ServletAdicionarObservador extends HttpServlet {
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
         
         String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getParameter("idJogo");
+        String idJogo = (String) request.getAttribute("idJogo");
         
         if (idJogo == null){
             idJogo = request.getParameter("idJogo");

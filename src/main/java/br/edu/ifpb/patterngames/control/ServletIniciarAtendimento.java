@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 /**
  *
  * @author Natarajan
@@ -35,18 +34,22 @@ public class ServletIniciarAtendimento extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession sessao = request.getSession();
-        Cliente cliente = new ClienteBdDao().buscar(request.getParameter("cpf"));
-        
-        if (cliente != null) {
-            sessao.setAttribute("cliente", cliente);
-            response.sendRedirect("home");
+
+        if (sessao != null) {
+            Cliente cliente = new ClienteBdDao().buscar(request.getParameter("cpf"));
+
+            if (cliente != null) {
+                sessao.setAttribute("cliente", cliente);
+                response.sendRedirect("home");
+            } else {
+                response.sendRedirect("index");
+            }
         } else {
             response.sendRedirect("index");
         }
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

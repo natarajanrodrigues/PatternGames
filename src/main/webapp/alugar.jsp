@@ -40,7 +40,7 @@
 
         <div class="container">
 
-           <div>   
+            <div>   
                 <label>Cliente: </label> ${cliente.nome} 
             </div>
             <a href="ServletFinalizarAtendimento" class="btn-link"> Escolher outro cliente</a>
@@ -53,8 +53,7 @@
                         <div class="form-group has-feedback">
                             <label for="jogo" class="control-label">Escolha um jogo</label>
                             <select class="form-control" id="idJogo" name="idJogo" autofocus="true"> 
-                                <%                                    
-                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
+                                <%                                    List<Jogo> jogos = new JogoBdDao().listarTodos();
                                     Collections.sort(jogos, Jogo.Comparators.NOME);
                                     pageContext.setAttribute("games", jogos);
                                     try {
@@ -76,7 +75,10 @@
                             <div id="alertaErroLocacao" class="alert alert-info alert-dismissible" role="alert"></div>
                             <div class="container-fluid">
                                 <label>Deseja ser informado por email quando este jogo for devolvido?</label>
-                                <a id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Avise-me</a>
+                                <!--<a id="btnObserver" form="formJogo" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Avise-me</a>-->
+                                <btn id="btnAddObserver" class="btn btn-primary">Avise-me</btn>
+                                <!--<input id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary" value="Avise-me">-->
+                                <!--<btn id="btnAddObserver" action="ServletAdicionarObservador" form="formJogo" type="submit" class="btn btn-primary">Avise-me</btn>-->
                             </div>
 
 
@@ -100,11 +102,11 @@
     <script src="dist/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         var toasty = document.getElementsByClassName('toasty')[0];
-        function playToasty(){
+        function playToasty() {
             document.getElementById("mktoasty").play();
         }
 
-        function playBack(){
+        function playBack() {
             document.getElementById("get_over_here").play();
         }
         function processaRequest() {
@@ -119,17 +121,17 @@
             $.post("ServletAlugarJogo", dados, function (responseGson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
 
                 var resultado = responseGson.alugou;
-                
+
 
                 if (resultado === "ok") {
 //                        $(location).attr('href', 'home');
                     $('#alertaLocacaoSucesso').show(250).text("Alugado com Sucesso");
-                    
+
                     playToasty();
                     toasty.classList.add('indo');
-                    setTimeout("playBack()",700);
-                    setTimeout("toasty.classList.add('vindo'), toasty.classList.remove('indo')",1500);
-                    setTimeout("toasty.classList.remove('vindo')",100);
+                    setTimeout("playBack()", 700);
+                    setTimeout("toasty.classList.add('vindo'), toasty.classList.remove('indo')", 1500);
+                    setTimeout("toasty.classList.remove('vindo')", 100);
                 } else {
                     var value = responseGson.erro;
 //                    $('#alertaErroLocacao').hide();
@@ -142,6 +144,15 @@
         }
 
         $('#btnAlugar').click(processaRequest);
+
+        $('#btnAddObserver').click(
+                function () {
+//                    alert('aqui');
+                    $(location).attr('href', 'ServletAdicionarObservador?idJogo=' + $('#idJogo').val());
+                }
+
+
+        );
 
         $(document).ready(function () {
             $("#liHome").addClass("active");
