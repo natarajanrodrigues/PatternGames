@@ -5,6 +5,7 @@
  */
 package br.edu.ifpb.patterngames.persistencia;
 
+import br.edu.ifpb.patterngames.entity.Cliente;
 import br.edu.ifpb.patterngames.entity.Jogo;
 import br.edu.ifpb.patterngames.entity.state.JogoAlugado;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,6 +39,14 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
     }
     
     public boolean alugar(Jogo objeto) {
+        return setarStatus(objeto, false);
+    }
+    
+    public boolean devolver(Jogo objeto) {
+        return setarStatus(objeto, true);
+    }
+    
+    private boolean setarStatus(Jogo jogo, boolean isDisponivel) {
         
         try {
 
@@ -44,10 +54,11 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
                 conectar();
             }
 
-            String sql = "UPDATE Jogo SET isDisponivel = false WHERE id = ?";
+            String sql = "UPDATE Jogo SET isDisponivel = ? WHERE id = ?";
             PreparedStatement ps = getConnection().prepareStatement(sql);
 
-            ps.setInt(1, objeto.getId());
+            ps.setBoolean(1, isDisponivel);
+            ps.setInt(2, jogo.getId());
 
             if (ps.executeUpdate() > 0)
                 return true;
@@ -56,6 +67,7 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             return false;
         }
         return false;
+    
     }
 
     @Override
@@ -111,7 +123,7 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
         }
     }
     
-    public boolean adicionarObservador(int idJogo, String cpfCliente){
+    public boolean adicionarObservador(Integer idJogo, String cpfCliente){
         try {
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
@@ -132,7 +144,7 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
         return false;
     }
     
-    public boolean removerObservador(int idJogo, String cpfCliente){
+    public boolean removerObservador(Integer idJogo, String cpfCliente){
         try {
             if (getConnection() == null || getConnection().isClosed()) {
                 conectar();
@@ -152,6 +164,33 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
         }
         return false;
     }
+    
+    
+    public List<Cliente> buscarObservadores(Integer idJogo) {
+        try {
+            List<Cliente> observadores = new LinkedList<>();
+            ClienteBdDao clienteBdDao = new ClienteBdDao();
+            
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+            String sql = "SELECT * FROM Observacoes WHERE idJogo = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, idJogo);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                observadores.add(clienteBdDao.buscar(rs.getString("cpfCliente")));
+            }
+
+            return observadores;
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
 
     private Jogo preencherJogo(ResultSet rs) {
         Jogo jogo;
@@ -164,6 +203,10 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
             if (!rs.getBoolean("isDisponivel")) {
                 jogo.setEstado(new JogoAlugado());
             }
+            List<Cliente> observadores = buscarObservadores(jogo.getId());
+            for (Cliente c : observadores){
+                jogo.addObserver(c);
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -172,5 +215,6 @@ public class JogoBdDao extends GenericBdDao<Jogo, String>{
 
         return jogo;
     }
+    
     
 }

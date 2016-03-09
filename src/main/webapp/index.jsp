@@ -93,7 +93,7 @@
                                 $("#btnCadastrar").attr("href", 'cadastro.jsp?cpf=' + $("#cpf").val());
                                 $("#alertaClienteSemCadastro").show(250);
                             } else {
-                                $(location).attr('href', 'home?cpf=' + $("#cpf").val());
+                                $(location).attr('href', 'ServletIniciarAtendimento?cpf=' + $("#cpf").val());
 //                                $(location).attr('href', 'home');
                             }
                         } else {

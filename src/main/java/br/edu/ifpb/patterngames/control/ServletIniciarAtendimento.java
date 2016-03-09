@@ -6,27 +6,22 @@
 package br.edu.ifpb.patterngames.control;
 
 import br.edu.ifpb.patterngames.entity.Cliente;
-import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
-import br.edu.ifpb.patterngames.model.LocacaoBo;
-import com.google.gson.Gson;
+import br.edu.ifpb.patterngames.persistencia.ClienteBdDao;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sun.security.pkcs11.wrapper.Functions;
+import javax.servlet.http.HttpSession;
+
 
 /**
  *
  * @author Natarajan
  */
-@WebServlet(name = "ServletAlugarJogo", urlPatterns = {"/ServletAlugarJogo"})
-public class ServletAlugarJogo extends HttpServlet {
+@WebServlet(name = "ServletIniciarAtendimento", urlPatterns = {"/ServletIniciarAtendimento"})
+public class ServletIniciarAtendimento extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,37 +35,16 @@ public class ServletAlugarJogo extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("utf-8");
         
-        Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
+        HttpSession sessao = request.getSession();
+        Cliente cliente = new ClienteBdDao().buscar(request.getParameter("cpf"));
         
-        String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getParameter("idJogo");
-        
-        request.getSession().setAttribute("idJogo", idJogo);
-        
-        Map<String, String> resultadoLocacao = new HashMap<>();
-        
-        boolean alugar = false;
-        try {
-            alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
-            
-            if (alugar) {
-                resultadoLocacao.put("alugou", "ok");
-            }
-            
-        } catch (JogoAlugadoException ex) {
-            Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
-            resultadoLocacao.put("alugou", "fail");
-            resultadoLocacao.put("erro", ex.getMessage());
+        if (cliente != null) {
+            sessao.setAttribute("cliente", cliente);
+            response.sendRedirect("home");
+        } else {
+            response.sendRedirect("index");
         }
-        
-        
-        String json = new Gson().toJson(resultadoLocacao);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-                
         
         
     }

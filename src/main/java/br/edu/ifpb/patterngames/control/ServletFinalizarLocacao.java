@@ -6,12 +6,9 @@
 package br.edu.ifpb.patterngames.control;
 
 import br.edu.ifpb.patterngames.entity.Cliente;
-import br.edu.ifpb.patterngames.exceptions.JogoAlugadoException;
+import br.edu.ifpb.patterngames.exceptions.JogoDisponivelException;
 import br.edu.ifpb.patterngames.model.LocacaoBo;
-import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -19,14 +16,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sun.security.pkcs11.wrapper.Functions;
 
 /**
  *
  * @author Natarajan
  */
-@WebServlet(name = "ServletAlugarJogo", urlPatterns = {"/ServletAlugarJogo"})
-public class ServletAlugarJogo extends HttpServlet {
+@WebServlet(name = "ServletFinalizarLocacao", urlPatterns = {"/ServletFinalizarLocacao"})
+public class ServletFinalizarLocacao extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,41 +32,22 @@ public class ServletAlugarJogo extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws br.edu.ifpb.patterngames.exceptions.JogoDisponivelException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, JogoDisponivelException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
         
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
-        
         String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getParameter("idJogo");
         
-        request.getSession().setAttribute("idJogo", idJogo);
+        String numb = request.getParameter("idLocacao");
+        Integer idLocacao = Integer.parseInt(numb);
         
-        Map<String, String> resultadoLocacao = new HashMap<>();
-        
-        boolean alugar = false;
-        try {
-            alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
-            
-            if (alugar) {
-                resultadoLocacao.put("alugou", "ok");
-            }
-            
-        } catch (JogoAlugadoException ex) {
-            Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
-            resultadoLocacao.put("alugou", "fail");
-            resultadoLocacao.put("erro", ex.getMessage());
+        if (new LocacaoBo().finalizarLocacao(idLocacao)){
+            response.sendRedirect("home");
         }
-        
-        
-        String json = new Gson().toJson(resultadoLocacao);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-                
         
         
     }
@@ -87,7 +64,11 @@ public class ServletAlugarJogo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (JogoDisponivelException ex) {
+            Logger.getLogger(ServletFinalizarLocacao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -101,7 +82,11 @@ public class ServletAlugarJogo extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (JogoDisponivelException ex) {
+            Logger.getLogger(ServletFinalizarLocacao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

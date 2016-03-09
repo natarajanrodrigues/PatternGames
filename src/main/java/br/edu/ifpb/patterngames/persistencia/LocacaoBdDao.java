@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -64,11 +66,39 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
             ps.setDate(3, Date.valueOf(objeto.getDataLocacao()));
 
             if (objeto.getDataLocacao().getDayOfWeek().equals(DayOfWeek.SUNDAY) || objeto.getDataLocacao().getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
-                ps.setInt(4, TipoLocacao.COMUM.id);
-            } else {
                 ps.setInt(4, TipoLocacao.ESPECIAL.id);
+            } else {
+                ps.setInt(4, TipoLocacao.COMUM.id);
             }
 
+            if (ps.executeUpdate() > 0) {
+                return true;
+            }
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+        return false;
+    }
+    
+    
+    public boolean finalizar(Integer idLocacao) {
+        try {
+
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+
+            String sql = "UPDATE Locacao SET dataDevolucao = ?, valorPago = ? WHERE id = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+
+            Locacao loc = buscarPorId(idLocacao);
+            
+            ps.setDate(1, Date.valueOf(LocalDate.now()));
+            ps.setDouble(2, loc.calcularValor().doubleValue());
+            ps.setInt(3, idLocacao);
+            
             if (ps.executeUpdate() > 0) {
                 return true;
             }
@@ -90,9 +120,52 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public Locacao buscarPorId(Integer idLocacao){
+        try {
+
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+
+            String sql = "SELECT * FROM Locacao WHERE id = ?";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setInt(1, idLocacao);            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return montarLocacao(rs);
+            }
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     @Override
     public Locacao buscar(String key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public List<Locacao> buscarPorCliente(String cpfCliente) {
+        List<Locacao> locs = new LinkedList<>();
+        try {
+
+            if (getConnection() == null || getConnection().isClosed()) {
+                conectar();
+            }
+
+            String sql = "SELECT * FROM Locacao WHERE cpfCliente = ? AND dataDevolucao IS NULL";
+            PreparedStatement ps = getConnection().prepareStatement(sql);
+            ps.setString(1, cpfCliente);            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                locs.add(montarLocacao(rs));
+            }
+        } catch (SQLException | URISyntaxException | IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        
+        return locs;
     }
 
     @Override
@@ -105,7 +178,7 @@ public class LocacaoBdDao extends GenericBdDao<Locacao, String> {
         try {
 
             loc = new Locacao();
-            
+            loc.setId(rs.getInt("id"));
             loc.setCpfCliente(rs.getString("cpfCliente"));
             loc.setIdJogo(new Integer(rs.getInt("idJogo")).toString());
             loc.setDataLocacao(rs.getDate("dataLocacao").toLocalDate());

@@ -30,5 +30,12 @@ public class JogoBo {
     public List<Jogo> buscarTodos() {
         return new JogoBdDao().listarTodos();
     }
-
+    
+    public boolean adicionarObserver(Integer idJogo, String cpfCliente){
+        return new JogoBdDao().adicionarObservador(idJogo, cpfCliente);
+    }
+    
+    public boolean removerObserver(Integer idJogo, String cpfCliente){
+        return new JogoBdDao().removerObservador(idJogo, cpfCliente);
+    }
 }

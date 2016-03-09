@@ -38,6 +38,7 @@ public class Jogo implements Observable<Jogo> {
 
     public Jogo() {
         this.estado = new JogoDisponivel();
+        this.observers = new ArrayList<>();
     }
 
     public Integer getId() {

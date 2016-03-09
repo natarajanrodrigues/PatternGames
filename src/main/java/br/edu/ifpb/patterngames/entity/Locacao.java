@@ -18,6 +18,7 @@ import java.time.LocalDate;
  * @author Natarajan
  */
 public class Locacao {
+    private Integer id;
     private String cpfCliente;
     private String idJogo;
     private LocalDate dataLocacao;
@@ -44,6 +45,14 @@ public class Locacao {
 //        LocalDate dtPrevista = LocalDate.now().plusDays(strategy.getDURACAO() + 1);
 //        this.jogo.alugar(dtPrevista);
         
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocacaoStrategy getStrategy() {

@@ -18,7 +18,7 @@
     
     <servlet>
         <servlet-name>home</servlet-name>
-        <jsp-file>/home.jsp</jsp-file>
+        <jsp-file>/alugar.jsp</jsp-file>
     </servlet>
     
     <servlet-mapping>
