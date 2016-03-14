@@ -40,38 +40,39 @@ public class ServletAlugarJogo extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
-        
+
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
-        
-        String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getParameter("idJogo");
-        
-        request.getSession().setAttribute("idJogo", idJogo);
-        
-        Map<String, String> resultadoLocacao = new HashMap<>();
-        
-        boolean alugar = false;
-        try {
-            alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
-            
-            if (alugar) {
-                resultadoLocacao.put("alugou", "ok");
+
+        if (cliente != null) {
+            String cpfCliente = cliente.getCpf();
+            String idJogo = (String) request.getParameter("idJogo");
+
+            request.getSession().setAttribute("idJogo", idJogo);
+
+            Map<String, String> resultadoLocacao = new HashMap<>();
+
+            boolean alugar = false;
+            try {
+                alugar = new LocacaoBo().realizarLocacao(idJogo, cpfCliente);
+
+                if (alugar) {
+                    resultadoLocacao.put("alugou", "ok");
+                }
+
+            } catch (JogoAlugadoException ex) {
+                Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
+                resultadoLocacao.put("alugou", "fail");
+                resultadoLocacao.put("erro", ex.getMessage());
             }
-            
-        } catch (JogoAlugadoException ex) {
-            Logger.getLogger(ServletAlugarJogo.class.getName()).log(Level.SEVERE, null, ex);
-            resultadoLocacao.put("alugou", "fail");
-            resultadoLocacao.put("erro", ex.getMessage());
+
+            String json = new Gson().toJson(resultadoLocacao);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(json);
+        } else {
+            response.sendRedirect("index");
         }
-        
-        
-        String json = new Gson().toJson(resultadoLocacao);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json);
-                
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -34,14 +34,19 @@ public class ServletRemoverObservador extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
-        String cpfCliente = cliente.getCpf();
-        
-        Integer idJogo = new Integer(request.getParameter("idJogo"));
-        
-        
-        if (new JogoBo().removerObserver(idJogo, cpfCliente)){
-            response.sendRedirect("ServletAreaNotificacoes");
+
+        if (cliente != null) {
+            String cpfCliente = cliente.getCpf();
+
+            Integer idJogo = new Integer(request.getParameter("idJogo"));
+
+            if (new JogoBo().removerObserver(idJogo, cpfCliente)) {
+                response.sendRedirect("ServletAreaNotificacoes");
+            }
+        } else {
+            response.sendRedirect("index");
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

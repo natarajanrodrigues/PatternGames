@@ -38,18 +38,22 @@ public class ServletFinalizarLocacao extends HttpServlet {
             throws ServletException, IOException, JogoDisponivelException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
-        
+
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
-        String cpfCliente = cliente.getCpf();
-        
-        String numb = request.getParameter("idLocacao");
-        Integer idLocacao = Integer.parseInt(numb);
-        
-        if (new LocacaoBo().finalizarLocacao(idLocacao)){
-            response.sendRedirect("devolucao");
+
+        if (cliente != null) {
+            String cpfCliente = cliente.getCpf();
+
+            String numb = request.getParameter("idLocacao");
+            Integer idLocacao = Integer.parseInt(numb);
+
+            if (new LocacaoBo().finalizarLocacao(idLocacao)) {
+                response.sendRedirect("devolucao");
+            }
+        } else {
+            response.sendRedirect("index");
         }
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

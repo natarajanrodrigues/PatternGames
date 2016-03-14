@@ -36,24 +36,26 @@ public class ServletAdicionarObservador extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("utf-8");
-        
+
         Cliente cliente = (Cliente) request.getSession().getAttribute("cliente");
-        
-        String cpfCliente = cliente.getCpf();
-        String idJogo = (String) request.getAttribute("idJogo");
-        
-        if (idJogo == null){
-            idJogo = request.getParameter("idJogo");
+
+        if (cliente != null) {
+            String cpfCliente = cliente.getCpf();
+            String idJogo = (String) request.getAttribute("idJogo");
+
+            if (idJogo == null) {
+                idJogo = request.getParameter("idJogo");
+            }
+
+            JogoBo jogoBo = new JogoBo();
+
+            if (jogoBo.adicionarObserver(Integer.parseInt(idJogo), cpfCliente)) {
+                response.sendRedirect("ServletAreaNotificacoes");
+            }
+        } else {
+            response.sendRedirect("index");
         }
-            
-        
-        JogoBo jogoBo = new JogoBo();
-        
-        if (jogoBo.adicionarObserver(Integer.parseInt(idJogo), cpfCliente)){
-            response.sendRedirect("ServletAreaNotificacoes");
-        }
-        
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
