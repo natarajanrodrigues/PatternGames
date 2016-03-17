@@ -73,10 +73,12 @@
                         </div>
                         <div id="bannerJogoJaAlugado" hidden>
                             <div id="alertaErroLocacao" class="alert alert-info alert-dismissible" role="alert"></div>
-                            <div class="container-fluid">
+                            <div class="container-fluid text-center">
                                 <label>Deseja ser informado por email quando este jogo for devolvido?</label>
                                 <!--<a id="btnObserver" form="formJogo" href="ServletAdicionarObservador" type="submit" class="btn btn-primary">Avise-me</a>-->
-                                <btn id="btnAddObserver" class="btn btn-primary">Avise-me</btn>
+                                <br><br>
+                                <a id="btnAddObserver" form="formJogo" type="submit" class="btn btn-primary">Avise-me</a>
+                                <!--<btn id="btnAddObserver" class="btn btn-primary">Avise-me</btn>-->
                                 <!--<input id="btnObserver" href="ServletAdicionarObservador" type="submit" class="btn btn-primary" value="Avise-me">-->
                                 <!--<btn id="btnAddObserver" action="ServletAdicionarObservador" form="formJogo" type="submit" class="btn btn-primary">Avise-me</btn>-->
                             </div>
